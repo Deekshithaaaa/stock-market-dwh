@@ -1,7 +1,7 @@
 import yfinance as yf
 import boto3
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Stocks we want to track
 TICKERS = ["AAPL", "GOOGL", "MSFT", "AMZN", "TSLA"]
@@ -9,10 +9,11 @@ BUCKET = "stock-market-dwh-deekshitha"
 
 def fetch_stock_data(ticker):
     stock = yf.Ticker(ticker)
-    hist = stock.history(period="1mo")  # last 30 days
+    hist = stock.history(period="1mo")
+    hist = hist.reset_index()  # moves Date from index to a column
     return {
         "ticker": ticker,
-        "fetched_at": datetime.utcnow().isoformat(),
+        "fetched_at": datetime.now(timezone.utc).isoformat(),
         "records": json.loads(hist.to_json(orient="records", date_format="iso"))
     }
 
