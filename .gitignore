@@ -1,4 +1,4 @@
 .env
 *.csv
 __pycache__/
-.DS_Store
+.DS_Storevenv/
